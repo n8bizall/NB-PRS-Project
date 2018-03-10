@@ -40,13 +40,13 @@ namespace NB_PRS_Project.Models
         [Required]
         public bool Active { get; set; }
 
-        [Required]
+      //  [Required]
         public DateTime DateCreated { get; set; }   // TODO have system create this
 
-        [Required]
+       // [Required]
         public DateTime DateUpdated { get; set; }   // TODO have system create this
 
-        [Required]
+       // [Required]
         public int UpdatedByUser { get; set; }   
 
 

@@ -9,45 +9,46 @@ using System.Web.Mvc;
 
 namespace NB_PRS_Project.Controllers
 {
-    public class UsersController : Controller
+    public class VendorsController : Controller
     {
-        // GET: Users
+        // GET: Vendors
         public ActionResult Index()
         {
             return View();
         }
+        
 
         public AppDbContext db = new AppDbContext();
 
-        //Users/List
+        //Vendors/List
         public ActionResult List()
         {
-            return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+            return Json(db.Vendors.ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        //Users/Get/2
+        //Vendors/Get/2
         public ActionResult Get(int? id)
         {
             if (id == null)
             {
                 return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Vendor vendor = db.Vendors.Find(id);
+            if (vendor == null)
             {
                 return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
-            return Json(user, JsonRequestBehavior.AllowGet);
+            return Json(vendor, JsonRequestBehavior.AllowGet);
         }
 
-        //Users/Create
-        public ActionResult Create([FromBody]User user)
+        //Vendors/Create
+        public ActionResult Create([FromBody]Vendor vendor)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
-            db.Users.Add(user);
+            db.Vendors.Add(vendor);
             try
             {
                 db.SaveChanges();
@@ -57,14 +58,14 @@ namespace NB_PRS_Project.Controllers
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new JsonMessage("Success", "User was created the new id is:" + user.Id), JsonRequestBehavior.AllowGet); //This  will add user id to this string
+            return Json(new JsonMessage("Success", "Vendor was created the new id is:" + vendor.Id), JsonRequestBehavior.AllowGet); //This  will add vendor id to this string
         }
 
-        //Users/Remove
-        public ActionResult Remove([FromBody] User user)
+        //Vendors/Remove
+        public ActionResult Remove([FromBody] Vendor vendor)
         {
-            User user2 = db.Users.Find(user.Id);
-            db.Users.Remove(user2);
+            Vendor vendor2 = db.Vendors.Find(vendor.Id);
+            db.Vendors .Remove(vendor2);
             try
             {
                 db.SaveChanges();
@@ -73,29 +74,30 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User " + user2.Id + " " + (user2.FirstName + " " + user2.LastName) + " was deleted successfully"), JsonRequestBehavior.AllowGet);
+            return Json(new JsonMessage("Success", "Vendor : " + vendor2.Id + " " + vendor2.Name + " was deleted successfully"), JsonRequestBehavior.AllowGet);
         }
 
-        //Users/Change
-        public ActionResult Change([FromBody] User user)
+        //Vendors/Change
+        public ActionResult Change([FromBody] Vendor vendor)
         {
-            if (user == null)
+            if (vendor == null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
             }
-            User user2 = db.Users.Find(user.Id);
-            user2.Id = user.Id;
-            user2.UserName = user.UserName;
-            user2.Password = user.Password;
-            user2.FirstName = user.FirstName;
-            user2.LastName = user.LastName;
-            user2.Phone = user.Phone;
-            user2.Email = user.Email;
-            user2.IsReviewer = user.IsReviewer;
-            user2.IsAdmin = user.IsAdmin;
-            user2.Active = user.Active;
-            user2.DateCreated = user.DateCreated;
-            user2.DateUpdated = user.DateUpdated;
+            Vendor vendor2 = db.Vendors.Find(vendor.Id);
+            vendor2.Id = vendor.Id;
+            vendor2.Code = vendor.Code;
+            vendor2.Name = vendor.Name;
+            vendor2.Address = vendor.Address;
+            vendor2.City = vendor.City;
+            vendor2.State = vendor.State;
+            vendor2.Zip = vendor.Zip;
+            vendor2.Email = vendor.Email;
+            vendor2.IsPreApproved= vendor.IsPreApproved;
+            vendor2.IsActive = vendor.IsActive;
+            vendor2.DateCreated = vendor.DateCreated;
+            vendor2.DateUpdated = vendor.DateUpdated;
+            vendor2.UpdatedByUser = vendor.UpdatedByUser;
 
             try
             {
@@ -105,7 +107,7 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User " + user.Id + " " + (user.FirstName + " " + user.LastName) + " was changed"), JsonRequestBehavior.AllowGet);
+            return Json(new JsonMessage("Success", "Vendor " + vendor.Id + " " + vendor.Name + " was changed"), JsonRequestBehavior.AllowGet);
 
 
 
