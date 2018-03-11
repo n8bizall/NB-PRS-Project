@@ -55,13 +55,13 @@ namespace NB_PRS_Project.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [DefaultValue("getutcdate()")]
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateUpdated { get; set; }
 
         [Required]
-        public int UpdatedByUser { get; set; }
+        public int? UpdatedByUser { get; set; }
 
 
     }

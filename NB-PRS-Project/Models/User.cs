@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
+
 
 namespace NB_PRS_Project.Models
 {
@@ -15,9 +18,10 @@ namespace NB_PRS_Project.Models
         public string UserName { get; set; }
 
         [Required]
-        public string Password { get; set; }     //TODO has this password
+        [StringLength(30)]
+        public string Password { get; set; }     //TODO hash this password add salt property 
 
-        [StringLength(30)] [Required]
+       [StringLength(30)] [Required]
         public string FirstName { get; set; }
 
         [StringLength(30)] [Required]
@@ -40,14 +44,15 @@ namespace NB_PRS_Project.Models
         [Required]
         public bool Active { get; set; }
 
-      //  [Required]
-        public DateTime DateCreated { get; set; }   // TODO have system create this
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
+        public DateTime? DateCreated { get; set; }   // Have the system create the date
 
-       // [Required]
-        public DateTime DateUpdated { get; set; }   // TODO have system create this
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? DateUpdated { get; set; }   // Have system create this
 
-       // [Required]
-        public int UpdatedByUser { get; set; }   
+       
+        public int? UpdatedByUser { get; set; }   
 
 
     }

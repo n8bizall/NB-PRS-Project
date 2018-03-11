@@ -41,15 +41,13 @@ namespace NB_PRS_Project.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [DefaultValue("getutcdate()")]
-        [Required]
-        public DateTime DateCreated { get; set; }
+        public DateTime? DateCreated { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Required]
-        public DateTime DateUpdated { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] // [Required]  I am allowing nulls for testing 
+        public DateTime? DateUpdated { get; set; }
 
-        [Required]
-        public int UpdatedByUser { get; set; }
+        //[Required] 
+        public int? UpdatedByUser { get; set; }
 
         public virtual Vendor Vendor { get; set; }
 

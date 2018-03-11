@@ -17,7 +17,6 @@ namespace NB_PRS_Project.Models
         public int PurchaseRequestId { get; set; }
 
         [Required]
-        [Index(IsUnique = true)]
         public int ProductId { get; set; }
 
         [Required]
@@ -29,9 +28,10 @@ namespace NB_PRS_Project.Models
 
         [Required]
         [DecimalPrecision(10, 2)]
-        public decimal LineTotal { get; set; }
-
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public decimal LineTotal
+        { get; set; }
+        //TODO make system calculate
 
         public virtual PurchaseRequest PurchaseRequest { get; set; }
 
