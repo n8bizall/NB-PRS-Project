@@ -40,18 +40,18 @@ namespace NB_PRS_Project.Models
 
         public string ReasonForRejection { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [DefaultValue("getutcdate()")]
         [Required]
         public DateTime? DateCreated { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Required]
+       // [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? DateUpdated { get; set; }
 
-        [Required]
         public int? UpdatedByUser { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual List<PurchaseRequestLineItem> prliList { get; set; }
     }
 }

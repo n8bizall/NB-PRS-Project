@@ -44,10 +44,12 @@ namespace NB_PRS_Project.Controllers
         //Vendors/Create
         public ActionResult Create([FromBody]Vendor vendor)
         {
+            vendor.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
+            DateTime DateCreated = DateTime.Now;
             db.Vendors.Add(vendor);
             try
             {
@@ -80,6 +82,7 @@ namespace NB_PRS_Project.Controllers
         //Vendors/Change
         public ActionResult Change([FromBody] Vendor vendor)
         {
+            vendor.DateUpdated = DateTime.Now;
             if (vendor == null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
@@ -95,8 +98,6 @@ namespace NB_PRS_Project.Controllers
             vendor2.Email = vendor.Email;
             vendor2.IsPreApproved= vendor.IsPreApproved;
             vendor2.IsActive = vendor.IsActive;
-            vendor2.DateCreated = vendor.DateCreated;
-            vendor2.DateUpdated = vendor.DateUpdated;
             vendor2.UpdatedByUser = vendor.UpdatedByUser;
 
             try
@@ -109,7 +110,7 @@ namespace NB_PRS_Project.Controllers
             }
             return Json(new JsonMessage("Success", "Vendor " + vendor.Id + " " + vendor.Name + " was changed"), JsonRequestBehavior.AllowGet);
 
-
+            //TODO create a method that will print out the purchase order
 
         }
     }

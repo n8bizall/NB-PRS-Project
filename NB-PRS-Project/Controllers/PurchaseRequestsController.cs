@@ -2,8 +2,8 @@
 using NB_PRS_Project.Utility;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 
@@ -18,6 +18,24 @@ namespace NB_PRS_Project.Controllers
         }
 
         public AppDbContext db = new AppDbContext();
+       
+
+
+
+        // var sumLT = DbContext.PurchaseRequestLineItem.Where(e => e.Id == 2015).Sum(ep => ep.NoOfPeople * ep.Hours);
+
+        // group new { purchaseRequestLineItems, invoice, product
+        // }
+        //  by new
+        //{
+        //  invoice.InvoiceId,
+        //  company.CompanyId
+        //   }
+        //  into g
+        //select new 
+        //{
+        //     Sum = g.Sum(o => o.invoice.Quantity* o.product.Rate)
+        // }
 
         //PurchaseRequests/List
         public ActionResult List()
@@ -42,24 +60,40 @@ namespace NB_PRS_Project.Controllers
 
         //PurchaseRequests/Create
         public ActionResult Create([FromBody]PurchaseRequest purchaseRequest)
-        {
+        { 
+
+
+            purchaseRequest.DateCreated = DateTime.Now;
+
+            
+
+            //public List<PurchaseRequestLineItem> prliList;
+
+
+
+
+
+
+
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
             db.PurchaseRequests.Add(purchaseRequest);
+           
             try
             {
                 db.SaveChanges();
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return Json(new JsonMessage("Failure", ex.InnerException.Message), JsonRequestBehavior.AllowGet);
             }
 
             return Json(new JsonMessage("Success", "PurchaseRequest was created the new id is:" + purchaseRequest.Id), JsonRequestBehavior.AllowGet); //This  will add product id to this string
         }
 
+     
         //PurchaseRequests/Remove
         public ActionResult Remove([FromBody] PurchaseRequest purchaseRequest)
         {
@@ -79,6 +113,8 @@ namespace NB_PRS_Project.Controllers
         //PurchaseRequests/Change
         public ActionResult Change([FromBody] PurchaseRequest purchaseRequest)
         {
+            purchaseRequest.DateCreated = DateTime.Now;
+
             if (purchaseRequest== null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
@@ -93,8 +129,6 @@ namespace NB_PRS_Project.Controllers
             purchaseRequest2.Total = purchaseRequest.Total;
             purchaseRequest2.Active = purchaseRequest.Active;
             purchaseRequest2.ReasonForRejection = purchaseRequest.ReasonForRejection;
-            purchaseRequest2.DateCreated = purchaseRequest.DateCreated;
-            purchaseRequest2.DateUpdated = purchaseRequest.DateUpdated;
             purchaseRequest2.UpdatedByUser = purchaseRequest.UpdatedByUser;
 
             try

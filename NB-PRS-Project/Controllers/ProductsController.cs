@@ -44,10 +44,12 @@ namespace NB_PRS_Project.Controllers
         //Products/Create
         public ActionResult Create([FromBody]Product product)
         {
+            product.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
+            
             db.Products.Add(product);
             try
             {
@@ -80,6 +82,7 @@ namespace NB_PRS_Project.Controllers
         //Products/Change
         public ActionResult Change([FromBody] Product product)
         {
+            product.DateUpdated = DateTime.Now;
             if (product == null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
@@ -93,8 +96,7 @@ namespace NB_PRS_Project.Controllers
             product2.Unit = product.Unit;
             product2.PhotoPath = product.PhotoPath;
             product2.Active = product.Active;
-            product2.DateCreated = product.DateCreated;
-            product2.DateUpdated = product.DateUpdated;
+           
 
             try
             {

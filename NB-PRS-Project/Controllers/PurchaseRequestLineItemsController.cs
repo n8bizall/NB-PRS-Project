@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using static NB_PRS_Project.Models.PurchaseRequest;
+using static NB_PRS_Project.Models.PurchaseRequestLineItem;
 
 namespace NB_PRS_Project.Controllers
 {
@@ -19,7 +21,26 @@ namespace NB_PRS_Project.Controllers
 
         public AppDbContext db = new AppDbContext();
 
-        //public decimal TotalLineValue = (PurchaseRequestLineItem.Price * PurchaseRequestLineItem.Quantity);
+        //var id = 1;
+        //var query = PurchaseRequest.Total    // your starting point - table in the "from" statement
+        //   .Join(PurchaseRequest.Post_Metas, // the source table of the inner join
+        //      post => post.ID,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
+        //      meta => meta.Post_ID,   // Select the foreign key (the second part of the "on" clause)
+        //      (post, meta) => new { Post = post, Meta = meta }) // selection
+        //   .Where(postAndMeta => postAndMeta.Post.ID == id);    // where statement
+
+
+
+        //PurchaseRequestLineItem PurchaseRequestLineItem = new PurchaseRequestLineItem();
+        //PurchaseRequest PurchaseRequest = new PurchaseRequest();
+        //List<PurchaseRequestLineItem> list = new List<PurchaseRequestLineItem>();
+
+        //using(PurchaseRequestLineItem db = new PurchaseRequestLineItem()){
+        //  foreach(var PurchaseRequestLineItem in PurchaseRequestLineItems)
+  
+
+
+
 
 
         //PurchaseRequestLineItems/List
@@ -46,11 +67,21 @@ namespace NB_PRS_Project.Controllers
         //PurchaseRequestLineItems/Create
         public ActionResult Create([FromBody]PurchaseRequestLineItem purchaseRequestLineItem)
         {
+            purchaseRequestLineItem.DateCreated = DateTime.Now;
+
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
-            db.PurchaseRequestLineItems.Add(purchaseRequestLineItem);
+            
+            //foreach (PurchaseRequestLineItem prli in purchaseRequestLineItem)
+            //{
+            //    foreach(Product p in products)
+            //}
+
+
+                db.PurchaseRequestLineItems.Add(purchaseRequestLineItem);
+
             try
             {
                 db.SaveChanges();
@@ -82,6 +113,9 @@ namespace NB_PRS_Project.Controllers
         //PurchaseRequestLineItems/Change
         public ActionResult Change([FromBody] PurchaseRequestLineItem purchaseRequestLineItem)
         {
+
+            purchaseRequestLineItem.DateUpdated = DateTime.Now;
+
             if (purchaseRequestLineItem == null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
@@ -93,6 +127,9 @@ namespace NB_PRS_Project.Controllers
             purchaseRequestLineItem2.Quantity = purchaseRequestLineItem.Quantity;
             purchaseRequestLineItem2.Price = purchaseRequestLineItem.Price;
             purchaseRequestLineItem2.LineTotal = purchaseRequestLineItem.LineTotal;
+            purchaseRequestLineItem2.Active = purchaseRequestLineItem.Active;
+            purchaseRequestLineItem2.UpdatedByUser = purchaseRequestLineItem.UpdatedByUser;
+        
 
             try
             {

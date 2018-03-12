@@ -43,10 +43,12 @@ namespace NB_PRS_Project.Controllers
         //Users/Create
         public ActionResult Create([FromBody]User user)
         {
+            user.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
+            
             db.Users.Add(user);
             try
             {
@@ -79,6 +81,7 @@ namespace NB_PRS_Project.Controllers
         //Users/Change
         public ActionResult Change([FromBody] User user)
         {
+            user.DateUpdated = DateTime.Now;
             if (user == null)
             {
                 return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
@@ -94,8 +97,7 @@ namespace NB_PRS_Project.Controllers
             user2.IsReviewer = user.IsReviewer;
             user2.IsAdmin = user.IsAdmin;
             user2.Active = user.Active;
-            user2.DateCreated = user.DateCreated;
-            user2.DateUpdated = user.DateUpdated;
+          
 
             try
             {

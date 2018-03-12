@@ -44,8 +44,8 @@ namespace NB_PRS_Project.Models
         [Required]
         public bool Active { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
+        
+        //[DefaultValue("getutcdate()")]
         public DateTime? DateCreated { get; set; }   // Have the system create the date
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
