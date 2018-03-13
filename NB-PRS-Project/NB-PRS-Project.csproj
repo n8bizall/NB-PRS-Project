@@ -257,9 +257,32 @@
     <Compile Include="Migrations\201803121849578_adde prop fields to PRLI.Designer.cs">
       <DependentUpon>201803121849578_adde prop fields to PRLI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803122301491_completed GetTotal for PRLI.cs" />
+    <Compile Include="Migrations\201803122301491_completed GetTotal for PRLI.Designer.cs">
+      <DependentUpon>201803122301491_completed GetTotal for PRLI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803130114085_ignored circular refference.cs" />
+    <Compile Include="Migrations\201803130114085_ignored circular refference.Designer.cs">
+      <DependentUpon>201803130114085_ignored circular refference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131318265_appdbcontext changed.cs" />
+    <Compile Include="Migrations\201803131318265_appdbcontext changed.Designer.cs">
+      <DependentUpon>201803131318265_appdbcontext changed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131344475_removed virtual PRLI PRLI get set.cs" />
+    <Compile Include="Migrations\201803131344475_removed virtual PRLI PRLI get set.Designer.cs">
+      <DependentUpon>201803131344475_removed virtual PRLI PRLI get set.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131533555_appdb changed.cs" />
+    <Compile Include="Migrations\201803131533555_appdb changed.Designer.cs">
+      <DependentUpon>201803131533555_appdb changed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131541230_jsonignore to prli .cs" />
+    <Compile Include="Migrations\201803131541230_jsonignore to prli .Designer.cs">
+      <DependentUpon>201803131541230_jsonignore to prli .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
-    <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />
     <Compile Include="Models\PurchaseRequestLineItem.cs" />
@@ -391,6 +414,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803121849578_adde prop fields to PRLI.resx">
       <DependentUpon>201803121849578_adde prop fields to PRLI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803122301491_completed GetTotal for PRLI.resx">
+      <DependentUpon>201803122301491_completed GetTotal for PRLI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803130114085_ignored circular refference.resx">
+      <DependentUpon>201803130114085_ignored circular refference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131318265_appdbcontext changed.resx">
+      <DependentUpon>201803131318265_appdbcontext changed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131344475_removed virtual PRLI PRLI get set.resx">
+      <DependentUpon>201803131344475_removed virtual PRLI PRLI get set.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131533555_appdb changed.resx">
+      <DependentUpon>201803131533555_appdb changed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131541230_jsonignore to prli .resx">
+      <DependentUpon>201803131541230_jsonignore to prli .cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

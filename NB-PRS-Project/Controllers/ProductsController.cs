@@ -18,7 +18,7 @@ namespace NB_PRS_Project.Controllers
         }
  
 
-        public AppDbContext db = new AppDbContext();
+        private AppDbContext db = new AppDbContext();
 
         //Products/List
         public ActionResult List()

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using Utility;
 using static NB_PRS_Project.Models.PurchaseRequest;
 using static NB_PRS_Project.Models.PurchaseRequestLineItem;
 
@@ -13,40 +14,33 @@ namespace NB_PRS_Project.Controllers
 {
     public class PurchaseRequestLineItemsController : Controller
     {
-        // GET: PurchaseRequestLineItems
-        public ActionResult Index()
+      
+
+        private AppDbContext db = new AppDbContext();
+
+        private void UpdateTotal(int id)
         {
-            return View();
+            db = new AppDbContext();
+           var purchaseRequest = db.PurchaseRequests.Find(id);
+            purchaseRequest.Total = db.PurchaseRequestLineItems.Where(pl => pl.PurchaseRequestId == purchaseRequest.Id).Sum(p => p.Product.Price * p.Quantity);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
-
-        public AppDbContext db = new AppDbContext();
-
-        //var id = 1;
-        //var query = PurchaseRequest.Total    // your starting point - table in the "from" statement
-        //   .Join(PurchaseRequest.Post_Metas, // the source table of the inner join
-        //      post => post.ID,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
-        //      meta => meta.Post_ID,   // Select the foreign key (the second part of the "on" clause)
-        //      (post, meta) => new { Post = post, Meta = meta }) // selection
-        //   .Where(postAndMeta => postAndMeta.Post.ID == id);    // where statement
-
-
-
-        //PurchaseRequestLineItem PurchaseRequestLineItem = new PurchaseRequestLineItem();
-        //PurchaseRequest PurchaseRequest = new PurchaseRequest();
-        //List<PurchaseRequestLineItem> list = new List<PurchaseRequestLineItem>();
-
-        //using(PurchaseRequestLineItem db = new PurchaseRequestLineItem()){
-        //  foreach(var PurchaseRequestLineItem in PurchaseRequestLineItems)
-  
-
-
-
 
 
         //PurchaseRequestLineItems/List
         public ActionResult List()
         {
-            return Json(db.PurchaseRequestLineItems.ToList(), JsonRequestBehavior.AllowGet);
+            //return Json(db.PurchaseRequestLineItems.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.PurchaseRequestLineItems.ToList() };
         }
 
         //PurchaseRequestLineItems/Get/2
@@ -61,25 +55,25 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
-            return Json(purchaseRequestLineItem, JsonRequestBehavior.AllowGet);
-        }
+            UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
+
+
+
+            //return Json(purchaseRequestLineItem, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = purchaseRequestLineItem };
+        } 
 
         //PurchaseRequestLineItems/Create
         public ActionResult Create([FromBody]PurchaseRequestLineItem purchaseRequestLineItem)
         {
             purchaseRequestLineItem.DateCreated = DateTime.Now;
+            
 
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
             
-            //foreach (PurchaseRequestLineItem prli in purchaseRequestLineItem)
-            //{
-            //    foreach(Product p in products)
-            //}
-
-
                 db.PurchaseRequestLineItems.Add(purchaseRequestLineItem);
 
             try
@@ -90,6 +84,7 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
+            UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
 
             return Json(new JsonMessage("Success", "PurchaseRequestLineItem was created the new id is:" + purchaseRequestLineItem.Id), JsonRequestBehavior.AllowGet); //This  will add product id to this string
         }
@@ -107,7 +102,11 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
+            UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
+
             return Json(new JsonMessage("Success", "PurchaseRequestLineItem : " + purchaseRequestLineItem2.Id +  " was deleted successfully"), JsonRequestBehavior.AllowGet);
+
+            ;
         }
 
         //PurchaseRequestLineItems/Change
@@ -125,8 +124,6 @@ namespace NB_PRS_Project.Controllers
             purchaseRequestLineItem2.PurchaseRequestId = purchaseRequestLineItem.PurchaseRequestId;
             purchaseRequestLineItem2.ProductId = purchaseRequestLineItem.ProductId;
             purchaseRequestLineItem2.Quantity = purchaseRequestLineItem.Quantity;
-            purchaseRequestLineItem2.Price = purchaseRequestLineItem.Price;
-            purchaseRequestLineItem2.LineTotal = purchaseRequestLineItem.LineTotal;
             purchaseRequestLineItem2.Active = purchaseRequestLineItem.Active;
             purchaseRequestLineItem2.UpdatedByUser = purchaseRequestLineItem.UpdatedByUser;
         
@@ -139,11 +136,14 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
+            UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
             return Json(new JsonMessage("Success", "PurchaseRequestLineItem" + purchaseRequestLineItem.Id + " was changed"), JsonRequestBehavior.AllowGet);
 
+            
 
 
         }
-
+        
     }
+    
 }

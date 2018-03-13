@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NB_PRS_Project.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -48,12 +49,12 @@ namespace NB_PRS_Project.Models
         //[DefaultValue("getutcdate()")]
         public DateTime? DateCreated { get; set; }   // Have the system create the date
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? DateUpdated { get; set; }   // Have system create this
 
        
-        public int? UpdatedByUser { get; set; }   
+        public int? UpdatedByUser { get; set; }
 
-
+    
     }
 }

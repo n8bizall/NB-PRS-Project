@@ -1,5 +1,9 @@
-﻿using System;
+﻿using NB_PRS_Project.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,7 +19,7 @@ namespace NB_PRS_Project.Utility
             using (var sha256 = new SHA256Managed())
             {
                 // Send a sample text to hash.  
-                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
                 // Get the hashed string.  
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
@@ -29,7 +33,7 @@ namespace NB_PRS_Project.Utility
                 return BitConverter.ToString(bytes).Replace("-", "").ToLower();
             }
         }
-
-
+ 
+       
     }
 }

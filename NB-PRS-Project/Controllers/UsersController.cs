@@ -3,9 +3,14 @@ using NB_PRS_Project.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Security;
+using Utility;
 
 namespace NB_PRS_Project.Controllers
 {
@@ -17,7 +22,7 @@ namespace NB_PRS_Project.Controllers
             return View();
         }
 
-        public AppDbContext db = new AppDbContext();
+        private AppDbContext db = new AppDbContext();
 
         //Users/List
         public ActionResult List()
@@ -48,7 +53,7 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
             }
-            
+
             db.Users.Add(user);
             try
             {
@@ -97,7 +102,7 @@ namespace NB_PRS_Project.Controllers
             user2.IsReviewer = user.IsReviewer;
             user2.IsAdmin = user.IsAdmin;
             user2.Active = user.Active;
-          
+
 
             try
             {
@@ -112,5 +117,49 @@ namespace NB_PRS_Project.Controllers
 
 
         }
+
+        //Users/Login
+        public ActionResult Login(string userName, string password)
+        {
+            if (userName == null || password == null )
+            {
+                return Json(new JsonMessage("Failed", "Message = Invalid UserName or Password"), JsonRequestBehavior.AllowGet);
+            }
+            var user = db.Users.SingleOrDefault(u => u.UserName == userName && u.Password == password);
+            if (user == null)
+            {
+                return Json(new JsonMessage("Failed", "Message = No user found."), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new JsonMessage("Success", "Login worked"));
+            }
+        }
+
+        //Login (string username, string password)
+        //* read for the user with given user name
+        //to test Users/Login/ ?username= <u>& password= <p>
+
+
+        //[OperationContractAttribute]
+        //public bool Login(
+        //string username,
+        //string password,
+        //string salt,c:\users\max-student\source\repos\NB-PRS-Project\NB-PRS-Project\Models\
+        //string passwordHash,
+        //bool isPersistent)
+
+
+
+        //routes.MapRoute(name:"Login", url:"{controller}/{action}/{username}/{password}", defaults: new {controller = "Users"});
+
+
+
+
+
+
+
+
+
     }
 }

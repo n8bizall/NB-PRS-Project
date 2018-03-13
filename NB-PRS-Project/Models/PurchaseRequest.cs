@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -51,7 +52,7 @@ namespace NB_PRS_Project.Models
         public int? UpdatedByUser { get; set; }
 
         public virtual User User { get; set; }
-
+        
         public virtual List<PurchaseRequestLineItem> prliList { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
+using Utility;
 
 namespace NB_PRS_Project.Controllers
 {
@@ -17,30 +18,14 @@ namespace NB_PRS_Project.Controllers
             return View();
         }
 
-        public AppDbContext db = new AppDbContext();
+        private AppDbContext db = new AppDbContext();
        
-
-
-
-        // var sumLT = DbContext.PurchaseRequestLineItem.Where(e => e.Id == 2015).Sum(ep => ep.NoOfPeople * ep.Hours);
-
-        // group new { purchaseRequestLineItems, invoice, product
-        // }
-        //  by new
-        //{
-        //  invoice.InvoiceId,
-        //  company.CompanyId
-        //   }
-        //  into g
-        //select new 
-        //{
-        //     Sum = g.Sum(o => o.invoice.Quantity* o.product.Rate)
-        // }
 
         //PurchaseRequests/List
         public ActionResult List()
         {
-            return Json(db.PurchaseRequests.ToList(), JsonRequestBehavior.AllowGet);
+            //return Json(db.PurchaseRequests.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.PurchaseRequests.ToList() };
         }
 
         //PurchaseRequests/Get/2
@@ -55,25 +40,15 @@ namespace NB_PRS_Project.Controllers
             {
                 return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
-            return Json(purchaseRequest, JsonRequestBehavior.AllowGet);
+           
+            //return Json(purchaseRequest, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = purchaseRequest};
         }
 
         //PurchaseRequests/Create
         public ActionResult Create([FromBody]PurchaseRequest purchaseRequest)
         { 
-
-
             purchaseRequest.DateCreated = DateTime.Now;
-
-            
-
-            //public List<PurchaseRequestLineItem> prliList;
-
-
-
-
-
-
 
             if (!ModelState.IsValid)
             {
