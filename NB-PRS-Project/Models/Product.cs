@@ -24,7 +24,7 @@ namespace NB_PRS_Project.Models
         [Required]
         public string Name { get; set; }
 
-        [Required]
+     
         [DecimalPrecision(10, 2)]            //see selaed class info below
         public decimal Price { get; set; }
 
@@ -35,18 +35,16 @@ namespace NB_PRS_Project.Models
         [StringLength(255)]
         public string PhotoPath { get; set; }
 
-        [Required]
+      
         [DefaultValue(true)]
         public bool Active { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime? DateCreated { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] // [Required]  I am allowing nulls for testing 
+      
         public DateTime? DateUpdated { get; set; }
 
-        //[Required] 
+       
         public int? UpdatedByUser { get; set; }
 
         public virtual Vendor Vendor { get; set; }

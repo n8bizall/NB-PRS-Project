@@ -48,12 +48,12 @@ namespace NB_PRS_Project.Controllers
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
             PurchaseRequestLineItem purchaseRequestLineItem = db.PurchaseRequestLineItems.Find(id);
             if (purchaseRequestLineItem == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
             }
             UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
 
@@ -66,13 +66,16 @@ namespace NB_PRS_Project.Controllers
         //PurchaseRequestLineItems/Create
         public ActionResult Create([FromBody]PurchaseRequestLineItem purchaseRequestLineItem)
         {
-            purchaseRequestLineItem.DateCreated = DateTime.Now;
-            
+            if (purchaseRequestLineItem.ProductId == 0) return new EmptyResult();
 
+            purchaseRequestLineItem.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
             }
+
+          
             
                 db.PurchaseRequestLineItems.Add(purchaseRequestLineItem);
 
@@ -82,16 +85,17 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
             UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
 
-            return Json(new JsonMessage("Success", "PurchaseRequestLineItem was created the new id is:" + purchaseRequestLineItem.Id), JsonRequestBehavior.AllowGet); //This  will add product id to this string
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase Request line item was created the new id is:" + purchaseRequestLineItem.Id) }; //This  will add user id to this string
         }
 
         //PurchaseRequestLineItems/Remove
         public ActionResult Remove([FromBody] PurchaseRequestLineItem purchaseRequestLineItem)
         {
+            if (purchaseRequestLineItem.Product == null) return new EmptyResult();
             PurchaseRequestLineItem purchaseRequestLineItem2 = db.PurchaseRequestLineItems.Find(purchaseRequestLineItem.Id);
             db.PurchaseRequestLineItems.Remove(purchaseRequestLineItem2);
             try
@@ -100,11 +104,11 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
             UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
 
-            return Json(new JsonMessage("Success", "PurchaseRequestLineItem : " + purchaseRequestLineItem2.Id +  " was deleted successfully"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase Request line item " + purchaseRequestLineItem2.Id + " was deleted successfully") };
 
             ;
         }
@@ -112,12 +116,19 @@ namespace NB_PRS_Project.Controllers
         //PurchaseRequestLineItems/Change
         public ActionResult Change([FromBody] PurchaseRequestLineItem purchaseRequestLineItem)
         {
-
+            if (purchaseRequestLineItem.Product == null) return new EmptyResult();
             purchaseRequestLineItem.DateUpdated = DateTime.Now;
+            purchaseRequestLineItem.Product = null;
+
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
 
             if (purchaseRequestLineItem == null)
             {
-                return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
             }
             PurchaseRequestLineItem purchaseRequestLineItem2 = db.PurchaseRequestLineItems.Find(purchaseRequestLineItem.Id);
             purchaseRequestLineItem2.Id = purchaseRequestLineItem.Id;
@@ -126,6 +137,7 @@ namespace NB_PRS_Project.Controllers
             purchaseRequestLineItem2.Quantity = purchaseRequestLineItem.Quantity;
             purchaseRequestLineItem2.Active = purchaseRequestLineItem.Active;
             purchaseRequestLineItem2.UpdatedByUser = purchaseRequestLineItem.UpdatedByUser;
+            purchaseRequestLineItem2.Product = purchaseRequestLineItem.Product;
         
 
             try
@@ -134,15 +146,18 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
             UpdateTotal(purchaseRequestLineItem.PurchaseRequestId);
-            return Json(new JsonMessage("Success", "PurchaseRequestLineItem" + purchaseRequestLineItem.Id + " was changed"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult
+            {
+                Data = new JsonMessage("Success", "Purchase Request line item " + purchaseRequestLineItem.Id + " was changed")
+            };
 
-            
 
 
-        }
+
+            }
         
     }
     

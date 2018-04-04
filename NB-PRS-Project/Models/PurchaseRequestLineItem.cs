@@ -31,6 +31,7 @@ namespace NB_PRS_Project.Models
         public DateTime? DateUpdated { get; set; }
 
         public int UpdatedByUser { get; set; }
+
         [JsonIgnore]
         public virtual PurchaseRequest PurchaseRequest { get; set; }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using Utility;
 
 namespace NB_PRS_Project.Controllers
 {
@@ -23,33 +24,40 @@ namespace NB_PRS_Project.Controllers
         //Products/List
         public ActionResult List()
         {
-            return Json(db.Products.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.Products.ToList() };
         }
 
         //Products/Get/2
         public ActionResult Get(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
             Product product = db.Products.Find(id);
             if (product == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
             }
-            return Json(product, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = product };
         }
 
         //Products/Create
         public ActionResult Create([FromBody]Product product)
         {
+            if (product.Name == null) return new EmptyResult();
             product.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
             }
-            
+
             db.Products.Add(product);
             try
             {
@@ -57,15 +65,16 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
 
-            return Json(new JsonMessage("Success", "Product was created the new id is:" + product.Id), JsonRequestBehavior.AllowGet); //This  will add product id to this string
+            return new JsonNetResult { Data = new JsonMessage("Success", "Product was created the new id is:" + product.Id) };
         }
 
         //Products/Remove
         public ActionResult Remove([FromBody] Product product)
         {
+            if (product.Name == null) return new EmptyResult();
             Product product2 = db.Products.Find(product.Id);
             db.Products.Remove(product2);
             try
@@ -74,18 +83,25 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "Product : " + product2.Id + product2.Name + " was deleted successfully"), JsonRequestBehavior.AllowGet);
+                       return new JsonNetResult { Data = new JsonMessage("Success", "User " + product2.Id + " " + (product2.Name) + " was deleted successfully") };
         }
 
         //Products/Change
         public ActionResult Change([FromBody] Product product)
         {
+            if (product.Name == null) return new EmptyResult();
             product.DateUpdated = DateTime.Now;
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+
             if (product == null)
             {
-                return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
             }
             Product product2 = db.Products.Find(product.Id);
             product2.Id = product.Id;
@@ -104,10 +120,9 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "Product " + product.Id + " " + product.Name + " was changed"), JsonRequestBehavior.AllowGet);
-
+                return new JsonNetResult { Data = new JsonMessage("Success", "User " + product.Id + " " + product.Name + ' ' + " was changed") };
 
 
         }

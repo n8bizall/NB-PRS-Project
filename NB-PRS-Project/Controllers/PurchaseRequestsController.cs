@@ -27,33 +27,39 @@ namespace NB_PRS_Project.Controllers
             //return Json(db.PurchaseRequests.ToList(), JsonRequestBehavior.AllowGet);
             return new JsonNetResult { Data = db.PurchaseRequests.ToList() };
         }
-
-        //PurchaseRequests/Get/2
+        public ActionResult ReviewList()
+        {
+            return new JsonNetResult { Data = db.PurchaseRequests.ToList().Where(P => P.Status == "REVIEW") };
+        }
+            //PurchaseRequests/Get/2
         public ActionResult Get(int? id)
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
             PurchaseRequest purchaseRequest = db.PurchaseRequests.Find(id);
             if (purchaseRequest == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
             }
            
-            //return Json(purchaseRequest, JsonRequestBehavior.AllowGet);
             return new JsonNetResult { Data = purchaseRequest};
         }
 
         //PurchaseRequests/Create
         public ActionResult Create([FromBody]PurchaseRequest purchaseRequest)
-        { 
+        {
+            if (purchaseRequest.Description == null) return new EmptyResult();
             purchaseRequest.DateCreated = DateTime.Now;
 
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
             }
+
+      
             db.PurchaseRequests.Add(purchaseRequest);
            
             try
@@ -62,16 +68,16 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.InnerException.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-
-            return Json(new JsonMessage("Success", "PurchaseRequest was created the new id is:" + purchaseRequest.Id), JsonRequestBehavior.AllowGet); //This  will add product id to this string
+            return new JsonNetResult { Data = new Msg { Result = "Success", Message = "Purchase Request was created the new id is:" + purchaseRequest.Id, Data = purchaseRequest } }; //This  will add user id to this string
         }
 
-     
+
         //PurchaseRequests/Remove
         public ActionResult Remove([FromBody] PurchaseRequest purchaseRequest)
         {
+            if (purchaseRequest.Description == null) return new EmptyResult();
             PurchaseRequest purchaseRequest2 = db.PurchaseRequests.Find(purchaseRequest.Id);
             db.PurchaseRequests.Remove(purchaseRequest2);
             try
@@ -80,19 +86,20 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "PurchaseRequest : " + purchaseRequest2.Id + " was deleted successfully"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase Request " + purchaseRequest2.Id  + " was deleted successfully") };
         }
 
         //PurchaseRequests/Change
         public ActionResult Change([FromBody] PurchaseRequest purchaseRequest)
         {
+            if (purchaseRequest.Description == null) return new EmptyResult();
             purchaseRequest.DateCreated = DateTime.Now;
 
             if (purchaseRequest== null)
             {
-                return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
             }
             PurchaseRequest purchaseRequest2 = db.PurchaseRequests.Find(purchaseRequest.Id);
             purchaseRequest2.Id = purchaseRequest.Id;
@@ -112,12 +119,9 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "PurchaseRequest: " + purchaseRequest.Id + " was changed"), JsonRequestBehavior.AllowGet);
-
-
-
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase Request " + purchaseRequest.Id + " was changed") };
         }
 
     }

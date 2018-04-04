@@ -187,6 +187,7 @@
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchaseRequestsController.cs" />
     <Compile Include="Controllers\PurchaseRequestLineItemsController.cs" />
+    <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
@@ -281,16 +282,39 @@
     <Compile Include="Migrations\201803131541230_jsonignore to prli .Designer.cs">
       <DependentUpon>201803131541230_jsonignore to prli .cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803202213097_AppDBContext had changed.cs" />
+    <Compile Include="Migrations\201803202213097_AppDBContext had changed.Designer.cs">
+      <DependentUpon>201803202213097_AppDBContext had changed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803231812470_JSNO net result added.cs" />
+    <Compile Include="Migrations\201803231812470_JSNO net result added.Designer.cs">
+      <DependentUpon>201803231812470_JSNO net result added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803231945569_removed date time constraints.cs" />
+    <Compile Include="Migrations\201803231945569_removed date time constraints.Designer.cs">
+      <DependentUpon>201803231945569_removed date time constraints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803242221133_fixes date constraints in all models.cs" />
+    <Compile Include="Migrations\201803242221133_fixes date constraints in all models.Designer.cs">
+      <DependentUpon>201803242221133_fixes date constraints in all models.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803261944084_added status class and controller.cs" />
+    <Compile Include="Migrations\201803261944084_added status class and controller.Designer.cs">
+      <DependentUpon>201803261944084_added status class and controller.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />
     <Compile Include="Models\PurchaseRequestLineItem.cs" />
+    <Compile Include="Models\Status.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\JsonMessage.cs" />
     <Compile Include="Utility\JsonNetResult.cs" />
+    <Compile Include="Utility\ModelStateErrors.cs" />
+    <Compile Include="Utility\Msg.cs" />
     <Compile Include="Utility\PasswordHash.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +374,7 @@
     <Folder Include="Views\Products\" />
     <Folder Include="Views\PurchaseRequestLineItems\" />
     <Folder Include="Views\PurchaseRequest\" />
+    <Folder Include="Views\Status\" />
     <Folder Include="Views\Users\" />
     <Folder Include="Views\Vendors\" />
   </ItemGroup>
@@ -432,6 +457,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803131541230_jsonignore to prli .resx">
       <DependentUpon>201803131541230_jsonignore to prli .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803202213097_AppDBContext had changed.resx">
+      <DependentUpon>201803202213097_AppDBContext had changed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803231812470_JSNO net result added.resx">
+      <DependentUpon>201803231812470_JSNO net result added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803231945569_removed date time constraints.resx">
+      <DependentUpon>201803231945569_removed date time constraints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803242221133_fixes date constraints in all models.resx">
+      <DependentUpon>201803242221133_fixes date constraints in all models.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803261944084_added status class and controller.resx">
+      <DependentUpon>201803261944084_added status class and controller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

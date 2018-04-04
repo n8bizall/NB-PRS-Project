@@ -41,12 +41,8 @@ namespace NB_PRS_Project.Models
 
         public string ReasonForRejection { get; set; }
 
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
-        [Required]
         public DateTime? DateCreated { get; set; }
 
-       // [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? DateUpdated { get; set; }
 
         public int? UpdatedByUser { get; set; }

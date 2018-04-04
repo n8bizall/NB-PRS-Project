@@ -27,7 +27,7 @@ namespace NB_PRS_Project.Controllers
         //Users/List
         public ActionResult List()
         {
-            return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.Users.ToList() };
         }
 
         //Users/Get/2
@@ -35,23 +35,24 @@ namespace NB_PRS_Project.Controllers
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
             User user = db.Users.Find(id);
             if (user == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
             }
-            return Json(user, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = user };
         }
 
         //Users/Create
         public ActionResult Create([FromBody]User user)
         {
+            if (user.UserName == null) return new EmptyResult();
             user.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "ModelState is not valid") };
             }
 
             db.Users.Add(user);
@@ -61,15 +62,15 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-
-            return Json(new JsonMessage("Success", "User was created the new id is:" + user.Id), JsonRequestBehavior.AllowGet); //This  will add user id to this string
+            return new JsonNetResult { Data = new JsonMessage("Success", "User was created the new id is:" + user.Id) }; //This  will add user id to this string
         }
 
         //Users/Remove
         public ActionResult Remove([FromBody] User user)
         {
+            if (user.UserName == null) return new EmptyResult();
             User user2 = db.Users.Find(user.Id);
             db.Users.Remove(user2);
             try
@@ -78,18 +79,19 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "User " + user2.Id + " " + (user2.FirstName + " " + user2.LastName) + " was deleted successfully"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = new JsonMessage("Success", "User " + user2.Id + " " + (user2.FirstName + " " + user2.LastName) + " was deleted successfully") };
         }
 
         //Users/Change
         public ActionResult Change([FromBody] User user)
         {
+            if (user.UserName == null) return new EmptyResult();
             user.DateUpdated = DateTime.Now;
             if (user == null)
             {
-                return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
             }
             User user2 = db.Users.Find(user.Id);
             user2.Id = user.Id;
@@ -110,29 +112,28 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "User " + user.Id + " " + (user.FirstName + " " + user.LastName) + " was changed"), JsonRequestBehavior.AllowGet);
-
-
-
+            return new JsonNetResult { Data = new JsonMessage("Success", "User " + user.Id + " " + (user.FirstName + " " + user.LastName) + " was changed") };
         }
 
         //Users/Login
         public ActionResult Login(string userName, string password)
-        {
-            if (userName == null || password == null )
+        {   
+           
+
+            if (userName == null || password == null)
             {
-                return Json(new JsonMessage("Failed", "Message = Invalid UserName or Password"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failed", "Message = Invalid UserName or Password") };
             }
             var user = db.Users.SingleOrDefault(u => u.UserName == userName && u.Password == password);
             if (user == null)
             {
-                return Json(new JsonMessage("Failed", "Message = No user found."), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failed", "Message = No user found.") };
             }
             else
             {
-                return Json(new JsonMessage("Success", "Login worked"));
+                return new JsonNetResult { Data =user};
             }
         }
 

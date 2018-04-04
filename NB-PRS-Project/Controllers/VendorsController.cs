@@ -2,10 +2,12 @@
 using NB_PRS_Project.Utility;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using Utility;
 
 namespace NB_PRS_Project.Controllers
 {
@@ -23,7 +25,7 @@ namespace NB_PRS_Project.Controllers
         //Vendors/List
         public ActionResult List()
         {
-            return Json(db.Vendors.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.Vendors.ToList() };
         }
 
         //Vendors/Get/2
@@ -31,23 +33,31 @@ namespace NB_PRS_Project.Controllers
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
             Vendor vendor = db.Vendors.Find(id);
             if (vendor == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
             }
-            return Json(vendor, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = vendor };
         }
 
         //Vendors/Create
         public ActionResult Create([FromBody]Vendor vendor)
         {
+            if (vendor.Code == null)
+            {
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record can not be found") };
+            }
+
             vendor.DateCreated = DateTime.Now;
+       
+
+
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "ModelState is not valid"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "ModelState is not valid") };
             }
             DateTime DateCreated = DateTime.Now;
             db.Vendors.Add(vendor);
@@ -57,15 +67,19 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-
-            return Json(new JsonMessage("Success", "Vendor was created the new id is:" + vendor.Id), JsonRequestBehavior.AllowGet); //This  will add vendor id to this string
+            return new JsonNetResult { Data = new JsonMessage("Success", "Vendor was created the new id is:" + vendor.Id) }; //This  will add user id to this string
         }
 
         //Vendors/Remove
         public ActionResult Remove([FromBody] Vendor vendor)
         {
+            if (vendor.Code == null)
+            {
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
+            }
+
             Vendor vendor2 = db.Vendors.Find(vendor.Id);
             db.Vendors .Remove(vendor2);
             try
@@ -74,18 +88,19 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "Vendor : " + vendor2.Id + " " + vendor2.Name + " was deleted successfully"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = new JsonMessage("Success", "Vendor " + vendor2.Id + " " + (vendor2.Code + " " + vendor2.Name) + " was deleted successfully") };
         }
 
         //Vendors/Change
         public ActionResult Change([FromBody] Vendor vendor)
         {
             vendor.DateUpdated = DateTime.Now;
-            if (vendor == null)
+            DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (vendor.Code == null)
             {
-                return Json(new JsonMessage("Failure", "The record has already been deleted,not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "The record has already been deleted,not found") };
             }
             Vendor vendor2 = db.Vendors.Find(vendor.Id);
             vendor2.Id = vendor.Id;
@@ -98,7 +113,7 @@ namespace NB_PRS_Project.Controllers
             vendor2.Email = vendor.Email;
             vendor2.IsPreApproved= vendor.IsPreApproved;
             vendor2.IsActive = vendor.IsActive;
-            vendor2.UpdatedByUser = vendor.UpdatedByUser;
+           // vendor2.UpdatedByUser = vendor.UpdatedByUser;
 
             try
             {
@@ -106,12 +121,12 @@ namespace NB_PRS_Project.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
             }
-            return Json(new JsonMessage("Success", "Vendor " + vendor.Id + " " + vendor.Name + " was changed"), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = new JsonMessage("Success", "Vendor " + vendor.Id + " " + (vendor.Code + " " + vendor.Name) + " was changed") };
+        
+        //TODO create a method that will print out the purchase order
 
-            //TODO create a method that will print out the purchase order
-
-        }
+    }
     }
 }
